@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UI Templates - Plataforma de Alojamientos</title>
+    <style>
+        /* -----------------------------
+           Reset & variables
+           ----------------------------- */
+        :root{
+            --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --accent:#2b6cb0; --accent-2:#00a86b; --danger:#e53e3e; --glass:rgba(255,255,255,0.6);
+            --radius:12px; --gap:16px; --max-width:1200px;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; margin:0; background:var(--bg); color:#111827; -webkit-font-smoothing:antialiased}
+        a{color:inherit; text-decoration:none}
+        img{max-width:100%; display:block}
+
+        /* -----------------------------
+           Layout Containers
+           ----------------------------- */
+        .container{max-width:var(--max-width); margin:24px auto; padding:0 16px}
+        .card{background:var(--card); border-radius:var(--radius); box-shadow:0 6px 18px rgba(17,24,39,0.06); padding:18px}
+        .grid{display:grid; gap:var(--gap)}
+        .row{display:flex; gap:var(--gap); align-items:center}
+
+        /* -----------------------------
+           Header / Nav
+           ----------------------------- */
+        header.site-header{background:linear-gradient(180deg,rgba(43,108,176,0.08),transparent); padding:14px 0}
+        .site-header .nav{display:flex; justify-content:space-between; align-items:center}
+        .brand{display:flex; gap:12px; align-items:center}
+        .brand .logo{width:44px; height:44px; background:var(--accent); border-radius:10px; display:grid; place-items:center; color:white; font-weight:700}
+        .nav-actions{display:flex; gap:8px}
+        .btn{padding:10px 14px; border-radius:10px; border:1px solid transparent; cursor:pointer}
+        .btn.primary{background:var(--accent); color:white}
+        .btn.ghost{background:transparent; border-color:transparent}
+
+        /* -----------------------------
+           Search Panel
+           ----------------------------- */
+        .search-panel{display:grid; grid-template-columns:1fr 320px; gap:16px; align-items:start}
+        .search-box{display:flex; gap:10px; align-items:center}
+        .input, .select{padding:12px; border-radius:10px; border:1px solid #e6e9ef; background:white; width:100%}
+        .date-inputs{display:flex; gap:8px}
+        .filters{display:flex; flex-direction:column; gap:8px}
+        .price-range{display:flex; gap:8px; align-items:center}
+        .chips{display:flex; gap:8px; flex-wrap:wrap}
+        .chip{padding:6px 10px; background:#f1f5f9; border-radius:999px; font-size:13px}
+
+        /* -----------------------------
+           Results & Cards
+           ----------------------------- */
+        .results{display:grid; grid-template-columns:1fr 360px; gap:16px}
+        .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px}
+        .card.listing{padding:0; overflow:hidden; display:flex; flex-direction:column}
+        .listing .media{height:160px; background:#eee}
+        .listing .meta{padding:12px}
+        .listing .meta h3{margin:0 0 6px; font-size:16px}
+        .listing .meta .sub{color:var(--muted); font-size:13px}
+        .listing .price{margin-left:auto; font-weight:700}
+        .rating{display:inline-flex; gap:6px; align-items:center; font-size:13px}
+
+        /* Map placeholder */
+        .map{height:420px; border-radius:12px; background:linear-gradient(90deg,#e6eefb,#f7fbf7); display:grid; place-items:center; color:var(--muted)}
+
+        /* -----------------------------
+           Listing Detail
+           ----------------------------- */
+        .gallery{display:grid; grid-template-columns:1fr 320px; gap:16px}
+        .gallery-main{height:420px; background:#ddd; border-radius:10px; overflow:hidden}
+        .gallery-thumbs{display:grid; gap:8px}
+        .thumb{height:80px; background:#efefef; border-radius:8px}
+        .detail-grid{display:grid; grid-template-columns:2fr 1fr; gap:16px}
+        .booking-card{position:sticky; top:24px}
+        .availability{padding:10px; border-radius:8px; background:#fafafa; border:1px solid #eef2f7}
+
+        /* -----------------------------
+           Forms (login, register, host forms)
+           ----------------------------- */
+        form .row{flex-direction:column; align-items:stretch}
+        label{font-weight:600; margin-bottom:6px}
+        .helper{font-size:13px; color:var(--muted)}
+        input[type="file"]{padding:6px}
+        .two-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+
+        /* -----------------------------
+           Host Dashboard
+           ----------------------------- */
+        .metrics{display:flex; gap:12px; flex-wrap:wrap}
+        .metric{flex:1; min-width:160px; padding:14px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); text-align:left}
+        .list-table{width:100%; border-collapse:collapse}
+        .list-table th, .list-table td{padding:10px; border-bottom:1px solid #f3f4f6; text-align:left}
+
+        /* -----------------------------
+           Comments
+           ----------------------------- */
+        .comment{display:flex; gap:12px; padding:10px 0}
+        .comment .avatar{width:44px; height:44px; border-radius:999px; background:#c7d2fe}
+        .stars{display:inline-flex; gap:4px; align-items:center}
+
+        /* -----------------------------
+           Pagination & small utilities
+           ----------------------------- */
+        .pagination{display:flex; gap:8px; align-items:center; justify-content:center; padding:12px}
+        .page{padding:8px 12px; border-radius:8px; background:#fff}
+
+        /* -----------------------------
+           Responsive
+           ----------------------------- */
+        @media (max-width:980px){
+            .search-panel{grid-template-columns:1fr}
+            .results{grid-template-columns:1fr}
+            .gallery{grid-template-columns:1fr}
+            .container{padding:0 12px}
+        }
+        @media (max-width:520px){
+            .two-cols{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="container nav card nav">
+        <div class="brand">
+            <div class="logo">A</div>
+            <div>
+                <div style="font-weight:700">AlojaApp</div>
+                <div style="font-size:12px; color:var(--muted)">Buscar, reservar y gestionar alojamientos</div>
+            </div>
+        </div>
+        <nav class="nav-actions">
+            <a class="btn ghost" href="#become-host">Conviértete en anfitrión</a>
+            <a class="btn" href="#login">Iniciar sesión</a>
+            <a class="btn primary" href="#register">Registrarse</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <!-- SEARCH PANEL -->
+    <section class="card search-panel">
+        <div>
+            <h2 style="margin-top:0">Buscar alojamientos</h2>
+            <p class="helper">Encuentra por ciudad, fechas y servicios. Resultados paginados (10 por página).</p>
+            <div style="margin-top:12px" class="grid">
+                <div class="search-box">
+                    <input class="input" type="text" placeholder="Ciudad (ej. Bogotá)" aria-label="Ciudad" />
+                    <div class="date-inputs" style="min-width:320px">
+                        <input class="input" type="date" aria-label="check-in" />
+                        <input class="input" type="date" aria-label="check-out" />
+                    </div>
+                    <select class="select" aria-label="Huéspedes">
+                        <option>1 huésped</option>
+                        <option>2 huéspedes</option>
+                        <option>3 huéspedes</option>
+                        <option>4+ huéspedes</option>
+                    </select>
+                    <button class="btn primary">Buscar</button>
+                </div>
+
+                <div class="filters card" style="padding:12px">
+                    <div style="display:flex; justify-content:space-between; align-items:center">
+                        <strong>Filtros</strong>
+                        <a class="helper" href="#">Limpiar</a>
+                    </div>
+                    <div style="margin-top:8px">
+                        <label class="helper">Precio por noche</label>
+                        <div class="price-range">
+                            <input class="input" type="number" placeholder="$50" style="width:110px" />
+                            <span class="helper">—</span>
+                            <input class="input" type="number" placeholder="$200" style="width:110px" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px">
+                        <label class="helper">Servicios</label>
+                        <div class="chips">
+                            <label class="chip"><input type="checkbox" /> WiFi</label>
+                            <label class="chip"><input type="checkbox" /> Piscina</label>
+                            <label class="chip"><input type="checkbox" /> Cocina</label>
+                            <label class="chip"><input type="checkbox" /> Mascotas</label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px">
+                        <label class="helper">Ordenar por</label>
+                        <select class="select">
+                            <option>Relevancia</option>
+                            <option>Precio: menor a mayor</option>
+                            <option>Precio: mayor a menor</option>
+                            <option>Más reservados</option>
+                            <option>Mejor calificados</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: summary / quick stats -->
+        <aside class="card" style="height:100%">
+            <h4 style="margin:0 0 8px 0">Explorar</h4>
+            <p class="helper">Sugerencias: Bogotá D.C., Medellín, Cartagena</p>
+            <div style="margin-top:12px; display:grid; gap:8px">
+                <div class="metric">Resultados: <strong>125</strong></div>
+                <div class="metric">Promedio precio: <strong>$120/noche</strong></div>
+                <div class="metric">Disponibles hoy: <strong>34</strong></div>
+            </div>
+        </aside>
+    </section>
+
+    <!-- SEARCH RESULTS -->
+    <section style="margin-top:18px" class="results">
+        <div>
+            <div class="cards">
+                <!-- Listing card (repeatable) -->
+                <article class="card listing">
+                    <div class="media" aria-hidden="true" style="background-image:url('https://picsum.photos/seed/1/800/600'); background-size:cover; background-position:center"></div>
+                    <div class="meta row">
+                        <div style="flex:1">
+                            <h3>Loft moderno en el centro</h3>
+                            <div class="sub">Bogotá D.C. · 2 huéspedes · 1 habitación</div>
+                            <div style="margin-top:8px" class="rating"><strong>4.7</strong> · <span class="helper">(124 opiniones)</span></div>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="price">$85 / noche</div>
+                            <div class="helper">Limpieza incluida</div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card listing">
+                    <div class="media" style="background-image:url('https://picsum.photos/seed/2/800/600'); background-size:cover; background-position:center"></div>
+                    <div class="meta row">
+                        <div style="flex:1">
+                            <h3>Casa con piscina y jardín</h3>
+                            <div class="sub">Chía · 6 huéspedes · 3 habitaciones</div>
+                            <div style="margin-top:8px" class="rating"><strong>4.9</strong> · <span class="helper">(54 opiniones)</span></div>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="price">$220 / noche</div>
+                            <div class="helper">Cancelación 48h</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- more cards... (to reach 10 per page in implementation) -->
+            </div>
+
+            <div class="card" style="margin-top:12px">
+                <div class="pagination">
+                    <button class="page">«</button>
+                    <button class="page">1</button>
+                    <button class="page">2</button>
+                    <button class="page">3</button>
+                    <button class="page">»</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right column: map + quick filters -->
+        <aside>
+            <div class="card map">Mapa interactivo (placeholder)</div>
+
+            <div class="card" style="margin-top:12px">
+                <h4 style="margin:0 0 8px 0">Filtros rápidos</h4>
+                <div class="chips">
+                    <label class="chip"><input type="checkbox" /> Piscina</label>
+                    <label class="chip"><input type="checkbox" /> WiFi</label>
+                    <label class="chip"><input type="checkbox" /> Pet-friendly</label>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+    <!-- LISTING DETAIL (ejemplo) -->
+    <section style="margin-top:28px" class="card">
+        <div class="gallery">
+            <div class="gallery-main">
+                <img src="https://picsum.photos/seed/detail/1200/800" alt="Imagen principal" style="width:100%; height:100%; object-fit:cover" />
+            </div>
+            <aside class="card" style="padding:12px">
+                <h3 style="margin-top:0">Casa boutique con terraza</h3>
+                <div class="helper">Bogotá D.C. · 4 huéspedes · 2 habitaciones</div>
+                <div style="margin-top:12px" class="availability booking-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center">
+                        <div>
+                            <div style="font-weight:700; font-size:20px">$150 <span style="font-weight:400">/ noche</span></div>
+                            <div class="helper">Promedio: 4.8 · (86 opiniones)</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div class="helper">Capacidad: 4</div>
+                            <div class="helper">Política: cancelar hasta 48h</div>
+                        </div>
+                    </div>
+
+                    <form style="margin-top:10px">
+                        <label class="helper">Fechas</label>
+                        <div class="date-inputs">
+                            <input class="input" type="date" />
+                            <input class="input" type="date" />
+                        </div>
+                        <label class="helper" style="margin-top:8px">Huéspedes</label>
+                        <select class="select">
+                            <option>1 huésped</option>
+                            <option>2 huéspedes</option>
+                            <option>3 huéspedes</option>
+                            <option>4 huéspedes</option>
+                        </select>
+                        <button class="btn primary" style="width:100%; margin-top:12px">Reservar</button>
+                    </form>
+
+                    <div style="margin-top:8px; font-size:13px" class="helper">Al confirmar recibirá correo con los detalles. Disponibilidad validada en el servidor (sin solapamiento).</div>
+                </div>
+            </aside>
+        </div>
+
+        <div style="margin-top:18px" class="detail-grid">
+            <div>
+                <h4>Descripción</h4>
+                <p>Descripción detallada del alojamiento. Incluye servicios, reglas de la casa, indicaciones de llegada y restricciones (no fumar, mascotas etc.).</p>
+
+                <h4>Comentarios</h4>
+                <div class="comment">
+                    <div class="avatar" aria-hidden="true"></div>
+                    <div>
+                        <div style="font-weight:700">María · <span class="helper">Jun 2025</span></div>
+                        <div class="stars">★★★★☆</div>
+                        <p>El lugar fue excelente, el anfitrión muy atento.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top:12px" class="card">
+                    <h5 style="margin:0 0 8px 0">Dejar comentario (solo después de estadía)</h5>
+                    <form>
+                        <label class="helper">Calificación</label>
+                        <select class="select"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+                        <label class="helper" style="margin-top:8px">Comentario</label>
+                        <textarea class="input" style="height:80px; resize:vertical" maxlength="500" placeholder="Máximo 500 caracteres"></textarea>
+                        <div style="display:flex; gap:8px; margin-top:8px">
+                            <button class="btn primary">Enviar</button>
+                            <button class="btn">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <aside>
+                <div class="card">
+                    <h4 style="margin-top:0">Detalles técnicos</h4>
+                    <div class="helper">Lat: - Bogota · Long: -</div>
+                    <div style="margin-top:8px">
+                        <strong>Métricas</strong>
+                        <div class="helper">Reservas (30d): 12</div>
+                        <div class="helper">Promedio calificación: 4.7</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top:12px">
+                    <h4 style="margin-top:0">Calendario</h4>
+                    <div class="helper">Vista de calendario (implementar calendario interactivo en JS).</div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- HOST DASHBOARD -->
+    <section id="become-host" style="margin-top:28px">
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center">
+                <h3 style="margin:0">Panel de anfitrión</h3>
+                <a class="btn" href="#new-listing">Nuevo alojamiento</a>
+            </div>
+
+            <div style="margin-top:12px" class="metrics">
+                <div class="metric">Total reservas: <strong>124</strong></div>
+                <div class="metric">Ingresos (30d): <strong>$7,420</strong></div>
+                <div class="metric">Promedio calificación: <strong>4.8</strong></div>
+            </div>
+
+            <h4 style="margin-top:16px">Mis alojamientos</h4>
+            <table class="list-table card" style="margin-top:8px">
+                <thead><tr><th>Título</th><th>Ciudad</th><th>Reservas</th><th>Calif.</th><th>Acciones</th></tr></thead>
+                <tbody>
+                <tr>
+                    <td>Casa boutique</td>
+                    <td>Bogotá D.C.</td>
+                    <td>12</td>
+                    <td>4.8</td>
+                    <td><button class="btn">Editar</button> <button class="btn">Ver reservas</button> <button class="btn" style="border-color:var(--danger); color:var(--danger)">Eliminar</button></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top:12px" class="card">
+                <h4 style="margin-top:0">Crear / Editar alojamiento</h4>
+                <form>
+                    <div class="two-cols">
+                        <div>
+                            <label>Título</label>
+                            <input class="input" />
+                        </div>
+                        <div>
+                            <label>Precio por noche</label>
+                            <input class="input" type="number" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px" class="two-cols">
+                        <div>
+                            <label>Ciudad</label>
+                            <input class="input" />
+                        </div>
+                        <div>
+                            <label>Dirección</label>
+                            <input class="input" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px">
+                        <label>Descripción detallada</label>
+                        <textarea class="input" style="height:120px"></textarea>
+                    </div>
+
+                    <div style="margin-top:8px">
+                        <label>Servicios</label>
+                        <div class="chips">
+                            <label class="chip"><input type="checkbox" /> WiFi</label>
+                            <label class="chip"><input type="checkbox" /> Piscina</label>
+                            <label class="chip"><input type="checkbox" /> Cocina</label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px">
+                        <label>Imágenes (1-10)</label>
+                        <input type="file" accept="image/*" multiple />
+                    </div>
+
+                    <div style="margin-top:10px; display:flex; gap:8px">
+                        <button class="btn primary">Guardar</button>
+                        <button class="btn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESERVATIONS & PROFILE -->
+    <section style="margin-top:28px" class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+            <h3 style="margin:0">Mis reservas</h3>
+            <div class="chips">
+                <label class="chip"><input type="checkbox" /> Activas</label>
+                <label class="chip"><input type="checkbox" /> Pasadas</label>
+                <label class="chip"><input type="checkbox" /> Canceladas</label>
+            </div>
+        </div>
+
+        <table class="list-table" style="margin-top:12px">
+            <thead><tr><th>Id</th><th>Alojamiento</th><th>Check-in</th><th>Check-out</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+            <tr><td>#1023</td><td>Casa boutique</td><td>2025-09-10</td><td>2025-09-15</td><td>Confirmada</td><td><button class="btn">Ver</button> <button class="btn" style="border-color:var(--danger); color:var(--danger)">Cancelar</button></td></tr>
+            </tbody>
+        </table>
+
+        <div style="margin-top:12px" class="card">
+            <h4 style="margin-top:0">Perfil</h4>
+            <form>
+                <div class="two-cols">
+                    <div>
+                        <label>Nombre</label>
+                        <input class="input" value="Camilo" />
+                    </div>
+                    <div>
+                        <label>Teléfono</label>
+                        <input class="input" />
+                    </div>
+                </div>
+                <div style="margin-top:8px">
+                    <label>Foto de perfil</label>
+                    <input type="file" accept="image/*" />
+                </div>
+
+                <div style="margin-top:10px">
+                    <button class="btn primary">Actualizar perfil</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- AUTH / FORGOT PASSWORD -->
+    <section id="login" style="margin-top:28px">
+        <div class="card" style="max-width:520px; margin:auto">
+            <h3 style="margin-top:0">Iniciar sesión</h3>
+            <form>
+                <label>Email</label>
+                <input class="input" type="email" />
+                <label style="margin-top:8px">Contraseña</label>
+                <input class="input" type="password" />
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
+                    <a class="helper" href="#forgot">Olvidé mi contraseña</a>
+                    <button class="btn primary">Entrar</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="register" class="card" style="max-width:720px; margin:18px auto 0 auto">
+            <h3 style="margin-top:0">Registro</h3>
+            <form>
+                <div class="two-cols">
+                    <div>
+                        <label>Nombre completo</label>
+                        <input class="input" />
+                    </div>
+                    <div>
+                        <label>Email (único)</label>
+                        <input class="input" type="email" />
+                    </div>
+                </div>
+
+                <div style="margin-top:8px" class="two-cols">
+                    <div>
+                        <label>Contraseña (mín 8 caracteres, mayúsculas/números)</label>
+                        <input class="input" type="password" />
+                    </div>
+                    <div>
+                        <label>Teléfono</label>
+                        <input class="input" type="tel" />
+                    </div>
+                </div>
+
+                <div style="margin-top:8px">
+                    <label>Fecha de nacimiento</label>
+                    <input class="input" type="date" />
+                </div>
+
+                <div style="margin-top:8px">
+                    <label>Rol</label>
+                    <select class="select"><option>Usuario</option><option>Anfitrión</option></select>
+                </div>
+
+                <div style="margin-top:10px; display:flex; gap:8px">
+                    <button class="btn primary">Crear cuenta</button>
+                    <button class="btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="forgot" class="card" style="max-width:520px; margin:18px auto">
+            <h3 style="margin-top:0">Recuperar contraseña</h3>
+            <form>
+                <label>Correo</label>
+                <input class="input" type="email" />
+                <div style="margin-top:8px; display:flex; gap:8px">
+                    <button class="btn primary">Enviar código</button>
+                    <div class="helper">El código expira en 15 minutos</div>
+                </div>
+            </form>
+
+            <form style="margin-top:12px">
+                <label>Código de recuperación</label>
+                <input class="input" />
+                <label style="margin-top:8px">Nueva contraseña</label>
+                <input class="input" type="password" />
+                <div style="margin-top:8px; display:flex; gap:8px">
+                    <button class="btn primary">Restablecer</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer style="margin:32px 0; text-align:center; color:var(--muted)">© 2025 AlojaApp — Plantilla UI (HTML + CSS)</footer>
+</main>
+</body>
+</html>
